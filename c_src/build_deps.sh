@@ -69,7 +69,11 @@ case "$1" in
 
         if [ ! -d snappy-$SNAPPY_VSN ]; then
             tar -xzf snappy-$SNAPPY_VSN.tar.gz
-            (cd snappy-$SNAPPY_VSN && ./configure --disable-shared --prefix=$BASEDIR/system --libdir=$BASEDIR/system/lib --with-pic)
+            if [ "$(uname)" == "Darwin" ]; then
+                (cd snappy-$SNAPPY_VSN && CXXFLAGS+="-std=c++11 -stdlib=libc++" ./configure --disable-shared --prefix=$BASEDIR/system --libdir=$BASEDIR/system/lib --with-pic)
+            else
+                (cd snappy-$SNAPPY_VSN && ./configure --disable-shared --prefix=$BASEDIR/system --libdir=$BASEDIR/system/lib --with-pic)
+            fi
         fi
 
         if [ ! -f system/lib/libsnappy.a ]; then
